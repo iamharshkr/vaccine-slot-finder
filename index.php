@@ -2,29 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name=viewport content="width=device-width, initial-scale=1.0" />
-<meta name="keywords" content="Covid Vaccine Slot Finder, Vaccine slot finder, Covid vaccine, Covaxin Slot Finder, Covishield Slot Finder, Vaccine Appointment">
-<meta name="description" content="The Covid Vaccine Slot Finder help you find vaccine slots. You can find your nearest vaccine centre for vaccination using your Pincode or District name.">
-<meta content="Get best shopping offers, Loot offers, Promo codes and Coupon, Recharge offers, Freebies for top online shopping websites in india. We help our visiters to find best online deals available on internet, so that they can save huge amount of money while shopping Online. Join Subhdeals and start saving now.">
 <title>Covid Vaccine Slot Finder</title>
-<meta property="og:title" content="Covid Vaccine Slot Finder">
-<meta property="og:site_name" content="Covid Vaccine Slot Finder">
-<meta property="og:type" content="website">
-<meta property="og:description" content="The Covid Vaccine Slot Finder help you find vaccine slots. You can find your nearest vaccine centre for vaccination using your Pincode or District name.">
-<meta name="thumbnail" content="https://subhdeals.com/vaccine-slot-finder/images/vaccine-slot-finder.png" />
-<meta property="og:image" content="https://subhdeals.com/vaccine-slot-finder/images/vaccine-slot-finder.png">
-<meta property="og:image:secure_url" content="https://subhdeals.com/vaccine-slot-finder/images/vaccine-slot-finder.png" />
-<meta property="og:image:type" content="image/png" />
-<meta property="og:image:width" content="400" />
-<meta property="og:image:height" content="400" />
-<meta property="og:image:alt" content="Covid Vaccine Slot Finder" />
-<link rel="canonical" href="https://subhdeals.com/vaccine-slot-finder" /><meta property="og:url" content="https://subhdeals.com/vaccine-slot-finder">
-<meta property="fb:app_id" content="359598814677775" />
-
-<meta property="twitter:title" content="Covid Vaccine Slot Finder">
-<meta property="twitter:site_name" content="https://subhdeals.com/vaccine-slot-finder">
-<meta property="twitter:description" content="The Covid Vaccine Slot Finder help you find vaccine slots. You can find your nearest vaccine centre for vaccination using your Pincode or District name.">
-<meta property="twitter:image" content="https://subhdeals.com/vaccine-slot-finder/images/vaccine-slot-finder.png"> <meta property="twitter:card" content="summary">
-<meta property="twitter:site" content="@subhdeals_com">
 <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
@@ -135,7 +113,7 @@ Find Slot Using City Name: <input class="form-check-input" type="radio" onclick=
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-function statepin() {
+function statepin() { //display tabs based state or pincode selected from radio button.
     if (document.getElementById('yesCheck').checked) {
         document.getElementById('searchState').style.display = 'block';
 		$("#slotlist").empty()
@@ -147,13 +125,13 @@ function statepin() {
     }
     else document.getElementById('searchpin').style.display = 'none';
 }
-function validateForm() {
+function validateForm() { //validate pincode length
   var x = document.getElementById("pincode").value.length;
   if (x < 6) {
     return false;
   }
 }
-function validateForm2() {
+function validateForm2() { //validate city name
   var x = document.getElementById("dist").value;
   if (x == "") {
     return false;
@@ -161,11 +139,11 @@ function validateForm2() {
 }
 </script>
 <script type="text/javascript">
-	$('#pinsearch').click(function() {
+	$('#pinsearch').click(function() { //check empty pincode
   if (validateForm() == false) {
     $('#slotlist').html("<div class='alert alert-danger'>Please Enter Correct Pincode.</div>");
   } else {
-    $(document).on('click','#pinsearch',function(){
+    $(document).on('click','#pinsearch',function(){ //get slots availability based on pincode
 		var pincode = document.getElementById("pincode").value;
 		var date = document.getElementById("pdate").value;
 		var newdate = changeDateFormatTo(date);
@@ -183,7 +161,7 @@ function validateForm2() {
     });
 }
 });
-	$(document).on('click','.nextpin',function(){
+	$(document).on('click','.nextpin',function(){ //append next date slots availability based on pincode
 		var pincode = document.getElementById("pincode").value;
 		var ndate = $(".nextpin").attr("ID");
 		var nextdate = nextDate(ndate);
@@ -203,11 +181,11 @@ function validateForm2() {
             }
         });
     });
-	$('#stsearch').click(function() {
+	$('#stsearch').click(function() { //check empty city name
   if (validateForm2() == false) {
     $('#slotlist').html("<div class='alert alert-danger'>Please Choose Your City.</div>");
   } else {
-$(document).on('click','#stsearch',function(){
+$(document).on('click','#stsearch',function(){ //get slots availability based on city name
 		var dist = document.getElementById("dist").value;  
 		var date = document.getElementById("date").value;
 		var newdate = changeDateFormatTo(date);
@@ -225,7 +203,7 @@ $(document).on('click','#stsearch',function(){
     });
 }
 });
-	$(document).on('click','.nextst',function(){
+	$(document).on('click','.nextst',function(){ //append next date slots availability based on city name
 		var dist = document.getElementById("dist").value;
 		var ndate = $(".nextst").attr("ID");
 		var nextdate = nextDate(ndate);
@@ -244,14 +222,14 @@ $(document).on('click','#stsearch',function(){
             }
         });
     });
-function nextDate(s) {
+function nextDate(s) { //add +1 in date
 let d = new Date(s);
 d.setUTCDate(d.getUTCDate() + 1);
 var date = d.toISOString().substr(0,10);
 const [yy, mm, dd] = date.split(/-/g);
 return `${dd}-${mm}-${yy}`;
 }
-const changeDateFormatTo = date => {
+const changeDateFormatTo = date => { //format date to dd-mm-yyyy
   const [yy, mm, dd] = date.split(/-/g);
   return `${dd}-${mm}-${yy}`;
 };
@@ -1062,7 +1040,7 @@ var $sort_select = $('#dist'),
       option_sort = $('<option value=""></option>');
     $('#state').change(function () {
       var tld_key = $(this).children('option:selected').data('tld'),
-        currentsort_mapping = sort_mapping[tld_key] || sort_mapping['default'];
+        currentsort_mapping = sort_mapping[tld_key] || sort_mapping['default']; //change city value according to state selected.
       $sort_select.empty();
       $.each(currentsort_mapping, function (value, name) {
         $sort_select.append(
