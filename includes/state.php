@@ -14,6 +14,7 @@ if(!empty($_POST["dist"])){
     if(count($resultToJson['sessions']) > 0){
       ?>
 <h2 class="slot">Slot Details for <?php echo $date ?></h2>
+<span class="agefilter">Minimum Age Limit: </span><br>
 <button id="show-all" class="filter-button clicked">Show All</button>
 <button id="18plus" class="filter-button">18+</button>
 <button id="45plus" class="filter-button">45+</button> 
