@@ -16,11 +16,10 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3885ec', endColorstr='#0059ce',GradientType=0 ); /* IE6-9 */
 	background-attachment: fixed;
   background-image: linear-gradient(to right, rgba(125, 52, 209), rgb(25, 38, 107));
-    padding: 25px;
-    background-color: white;
-    color: black;
-    font-size: 20px;
+  padding: 30px;
+  color: black;
 	text-align: center;
+  font-size: 20px;
 }
 .powered{
   font-size: 18px; 
@@ -38,17 +37,20 @@ sup{
 #searchpin{
 	display:none;
 }
-table{
-	overflow-x: auto;
-	background-color: #f2f2f2;
-	border-radius: 5px;
-	text-align: center;
-	font-size: 14; 
-}
 div.scroll {
   background-color: #333;
   overflow: auto;
   white-space: nowrap;
+  border-radius: 20px;
+  padding: 0;
+  margin: 5px 0 0 0;
+}
+table{
+	overflow-x: auto;
+	background-color: #f2f2f2;
+	border-radius: 5px;
+  font-size: 14px;
+	text-align: center;
 }
 a.title{
 	color: orange;
@@ -64,15 +66,37 @@ a.title{
 .box{
 	width: 60%;
 	align: center;
-  	border: 3px dotted white;
+  border: 3px dotted white;
 	padding: 20px;
 	border-radius: 15px;
   margin: auto;
 }
+.filter-button{
+  background-color:#93978e;
+  color: rgb(0, 0, 0);
+  padding:12px 4px;
+  border: none;
+  border-radius: 24px;
+  font-weight: bold;
+  cursor:pointer;
+  width: 120px;
+  height: 40px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.clicked{
+  background-color: rgb(7, 101, 209);
+}
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
+  body{
+    font-size: 14px;
+  }
   .box{
     width: 100%;
+  }
+  .filter-button{
+    width: 70px;
   }
 }
 </style>
@@ -113,7 +137,7 @@ Find Slot Using City Name: <input class="form-check-input" type="radio" onclick=
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script type="text/javascript">
-function statepin() { //display tabs based state or pincode selected from radio button.
+function statepin() {
     if (document.getElementById('yesCheck').checked) {
         document.getElementById('searchState').style.display = 'block';
 		$("#slotlist").empty()
@@ -125,13 +149,13 @@ function statepin() { //display tabs based state or pincode selected from radio 
     }
     else document.getElementById('searchpin').style.display = 'none';
 }
-function validateForm() { //validate pincode length
+function validateForm() {
   var x = document.getElementById("pincode").value.length;
   if (x < 6) {
     return false;
   }
 }
-function validateForm2() { //validate city name
+function validateForm2() {
   var x = document.getElementById("dist").value;
   if (x == "") {
     return false;
@@ -139,11 +163,11 @@ function validateForm2() { //validate city name
 }
 </script>
 <script type="text/javascript">
-	$('#pinsearch').click(function() { //check empty pincode
+	$('#pinsearch').click(function() {
   if (validateForm() == false) {
     $('#slotlist').html("<div class='alert alert-danger'>Please Enter Correct Pincode.</div>");
   } else {
-    $(document).on('click','#pinsearch',function(){ //get slots availability based on pincode
+    $(document).on('click','#pinsearch',function(){
 		var pincode = document.getElementById("pincode").value;
 		var date = document.getElementById("pdate").value;
 		var newdate = changeDateFormatTo(date);
@@ -161,7 +185,7 @@ function validateForm2() { //validate city name
     });
 }
 });
-	$(document).on('click','.nextpin',function(){ //append next date slots availability based on pincode
+	$(document).on('click','.nextpin',function(){
 		var pincode = document.getElementById("pincode").value;
 		var ndate = $(".nextpin").attr("ID");
 		var nextdate = nextDate(ndate);
@@ -181,11 +205,11 @@ function validateForm2() { //validate city name
             }
         });
     });
-	$('#stsearch').click(function() { //check empty city name
+	$('#stsearch').click(function() {
   if (validateForm2() == false) {
     $('#slotlist').html("<div class='alert alert-danger'>Please Choose Your City.</div>");
   } else {
-$(document).on('click','#stsearch',function(){ //get slots availability based on city name
+$(document).on('click','#stsearch',function(){
 		var dist = document.getElementById("dist").value;  
 		var date = document.getElementById("date").value;
 		var newdate = changeDateFormatTo(date);
@@ -203,7 +227,7 @@ $(document).on('click','#stsearch',function(){ //get slots availability based on
     });
 }
 });
-	$(document).on('click','.nextst',function(){ //append next date slots availability based on city name
+	$(document).on('click','.nextst',function(){
 		var dist = document.getElementById("dist").value;
 		var ndate = $(".nextst").attr("ID");
 		var nextdate = nextDate(ndate);
@@ -222,14 +246,35 @@ $(document).on('click','#stsearch',function(){ //get slots availability based on
             }
         });
     });
-function nextDate(s) { //add +1 in date
+    $(document).on('click','#show-all',function(){
+    $('#show-all').addClass('clicked');
+    $('#18plus').removeClass('clicked');
+    $('#45plus').removeClass('clicked');
+    $('.45').show();
+     $('.18').show();
+  });
+  $(document).on('click','#18plus',function(){
+     $('#18plus').addClass('clicked');
+     $('#show-all').removeClass('clicked');
+     $('#45plus').removeClass('clicked');
+     $('.45').hide();
+     $('.18').show();
+  });
+  $(document).on('click','#45plus',function(){
+     $('#45plus').addClass('clicked');
+     $('#show-all').removeClass('clicked');
+     $('#18plus').removeClass('clicked');
+     $('.45').show();
+     $('.18').hide();
+  });
+function nextDate(s) {
 let d = new Date(s);
 d.setUTCDate(d.getUTCDate() + 1);
 var date = d.toISOString().substr(0,10);
 const [yy, mm, dd] = date.split(/-/g);
 return `${dd}-${mm}-${yy}`;
 }
-const changeDateFormatTo = date => { //format date to dd-mm-yyyy
+const changeDateFormatTo = date => {
   const [yy, mm, dd] = date.split(/-/g);
   return `${dd}-${mm}-${yy}`;
 };
@@ -1040,7 +1085,7 @@ var $sort_select = $('#dist'),
       option_sort = $('<option value=""></option>');
     $('#state').change(function () {
       var tld_key = $(this).children('option:selected').data('tld'),
-        currentsort_mapping = sort_mapping[tld_key] || sort_mapping['default']; //change city value according to state selected.
+        currentsort_mapping = sort_mapping[tld_key] || sort_mapping['default'];
       $sort_select.empty();
       $.each(currentsort_mapping, function (value, name) {
         $sort_select.append(
