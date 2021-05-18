@@ -17,79 +17,93 @@ if (!empty($_POST["pin"])) {
 <span class="agefilter">Minimum Age Limit: </span><br>
 <button id="show-all" class="filter-button clicked">Show All</button>
 <button id="18plus" class="filter-button">18+</button>
-<button id="45plus" class="filter-button">45+</button> 
+<button id="45plus" class="filter-button">45+</button>
 <div class="scroll">
-  <table class="table table-bordered">
+  <table class="table">
     <thead>
       <tr>
-        <th>Centre Name</th>
-        <th>Minimum Age</th>
-        <th>Slots Available</th>
-		    <th>Vaccine name</th>
-        <th>Fee</th>
-		    <th>Timing</th>
-		    <th>Address</th>
+        <th scope="col">#</th>
+        <th scope="col">Centre Name</th>
+        <th scope="col">Minimum Age</th>
+        <th scope="col">Slots Available</th>
+		    <th scope="col">Vaccine name</th>
+        <th scope="col">Fee</th>
+		    <th scope="col">Timing</th>
+		    <th scope="col">Address</th>
       </tr>
     </thead>
     <tbody>
+    <tr>
+      <th colspan="8" class="message" id="message" >
+    </tr>
     <?php
-          $sessions = $resultToJson['sessions'];
-            foreach ($sessions as $session) {
-                $cname = $session['center_id'] . "-" . $session['name'];
-                $Address = $session['address'] . " " . $session['pincode'];
-                //echo $session['from'] ."-". $session['to'] ."<br>";
-                $Fee = $session['fee_type'];
-                $Date = $session['date'];
-                $Minimum_Age = $session['min_age_limit'];
-                $Slots = $session['available_capacity'];
-                if (isset($session['vaccine'])) {
-                  $Timing = '<ul>';
-                  $Vaccine = $session['vaccine'];
-                  if(isset($session['slots'][0])){
-                  $Timing .= '<li>' .$session['slots'][0] .'</li>';
+        $sessions = $resultToJson['sessions'];
+        $Fee = 'N/A';
+        $Timing = 'N/A';
+        $Minimum_Age = 'N/A';
+        $count = 0;
+        foreach ($sessions as $session) {
+            $cname = $session['center_id'] . "-" . $session['name'];
+            $Address = $session['address'] . " " . $session['pincode'];
+            $count += 1;
+            //echo $session['from'] ."-". $session['to'] ."<br>";
+            if (isset($session['fee_type'])) {
+                if ($session['fee_type'] != 'Free') {
+                    $Fee = $session['fee'];
+                } else {
+                    $Fee = $session['fee_type'];
+                }
+            }
+            $Date = $session['date'];
+            if(isset($session['min_age_limit'])){
+              $Minimum_Age = $session['min_age_limit'];
+              }
+            $Slots = $session['available_capacity'];
+            if (isset($session['vaccine'])) {
+                $Timing = '<ul>';
+                $Vaccine = $session['vaccine'];
+                if (isset($session['slots'][0])) {
+                  foreach($session['slots'] as $slots){
+                    $Timing .= '<li>' . $slots . '</li>';
                   }
-                  if(isset($session['slots'][1])){
-                  $Timing .= '<li>'. $session['slots'][1] .'</li>';
-                  }
-                  if(isset($session['slots'][2])){
-                  $Timing .= '<li>'. $session['slots'][2] .'</li></ul>';
-                  }
-                    }
-                ?>
+                }
+            }
+            ?>
         <tr class="<?php echo $Minimum_Age ?>">
+        <th scope="row"><?php echo $count ?></th>
         <td><?php echo $cname ?>
         <?php
-        if($Slots > 0){
-          ?>
+if ($Slots > 0) {
+                ?>
         <br>
         <a href="https://selfregistration.cowin.gov.in/" target="_blank"><button class="btn btn-primary">Book Your Slot</button></a>
         <?php
-        }
-        ?>
+}
+            ?>
         </td>
         <td><?php echo $Minimum_Age ?></td>
         <?php
 if ($Slots > 0) {
-                    ?>
+                ?>
         <td class="success"><?php echo $Slots ?></td>
         <?php
 } else {
-                    ?>
+                ?>
           <td class="danger">N/A</td>
           <?php
 }
-                ?>
+            ?>
         <td><?php echo $Vaccine ?></td>
         <td><?php echo $Fee ?></td>
-        <td class="timing"><?php echo $Timing ?></td>
+        <td class="timing"><?php echo $Timing ?></ul></td>
         <td><?php echo $Address ?></td>
         </tr>
         <?php
-  }
-  ?>
+}
+        ?>
       </tbody>
   </table>
-  </div><br>
+  </div>
   <button class="btn btn-info btn-lg nextpin" id="<?php echo $idpin ?>" name="nextpin">See Next Day Slots <i></i></button>
   <?php
     } else {
