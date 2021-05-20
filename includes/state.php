@@ -1,18 +1,18 @@
 <?php
-if(!empty($_POST["dist"])){
-    $dist= $_POST['dist'];
+if (!empty($_POST["dist"])) {
+    $dist = $_POST['dist'];
     $date = $_POST['date']; //date format - dd-mm-yyy
     $idpin = date('Y-m-d', strtotime($date));
-        $url = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=' .$dist. '&date=' .$date;
+    $url = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=' . $dist . '&date=' . $date;
     $resultToJson = get_data($url);
     if (!isset($resultToJson['sessions'])) {
-      ?>
+        ?>
         <h3>Something went error, Please try again.</h3>
       <?php
-      exit;
+exit;
     }
-    if(count($resultToJson['sessions']) > 0){
-      ?>
+    if (count($resultToJson['sessions']) > 0) {
+        ?>
 <h2 class="slot">Slot Details for <?php echo $date ?></h2>
 <span class="agefilter">Minimum Age Limit: </span><br>
 <button id="show-all" class="filter-button clicked">Show All</button>
@@ -38,9 +38,8 @@ if(!empty($_POST["dist"])){
       <th colspan="8" class="message" id="message" >
     </tr>
     <?php
-$Fee = 'N/A';
-        $Timing = 'N/A';
-        $Minimum_Age = 'N/A';
+        $Timing = $Minimum_Age = $Fee = 'N/A';
+        $Slots2 = $Slots1 = 'N/A';
         $count = 0;
         $sessions = $resultToJson['sessions'];
         foreach ($sessions as $session) {
@@ -56,25 +55,35 @@ $Fee = 'N/A';
                 }
             }
             $Date = $session['date'];
-            if(isset($session['min_age_limit'])){
-            $Minimum_Age = $session['min_age_limit'];
+            if (isset($session['min_age_limit'])) {
+                $Minimum_Age = $session['min_age_limit'];
             }
-            $Slots = $session['available_capacity'];
+            if (isset($session['available_capacity_dose1'])) {
+                $Slots1 = $session['available_capacity_dose1'];
+            }
+            if (isset($session['available_capacity_dose2'])) {
+                $Slots2 = $session['available_capacity_dose2'];
+            }
             if (isset($session['vaccine'])) {
-                $Timing = '<ul>';
+                $Timearr = array();
                 $Vaccine = $session['vaccine'];
                 if (isset($session['slots'][0])) {
-                  foreach($session['slots'] as $slots){
-                    $Timing .= '<li>' . $slots . '</li>';
-                  }
+                    foreach ($session['slots'] as $slots) {
+                        $Timearr[] .= $slots;
+                    }
                 }
+            }
+            if (isset($Timearr[0])) {
+                $mintime = explode('-', $Timearr[0]);
+                $maxtime = explode('-', $Timearr[count($Timearr) - 1]);
+                $Timing = $mintime[0] . '-' . $maxtime[1];
             }
             ?>
         <tr class="<?php echo $Minimum_Age ?>">
         <th scope="row"><?php echo $count ?></th>
         <td><?php echo $cname ?>
         <?php
-if ($Slots > 0) {
+if ($Slots1 > 0 or $Slots2 > 0) {
                 ?>
         <br>
         <a href="https://selfregistration.cowin.gov.in/" target="_blank"><button class="btn btn-primary">Book Your Slot</button></a>
@@ -84,13 +93,22 @@ if ($Slots > 0) {
         </td>
         <td><?php echo $Minimum_Age ?></td>
         <?php
-if ($Slots > 0) {
+if ($Slots1 > 0) {
                 ?>
-        <td class="success"><?php echo $Slots ?></td>
-        <?php
+<td><ul><li class="slotyes">Dose 1 : <?php echo $Slots1 ?></li>
+<?php
 } else {
                 ?>
-          <td class="danger">N/A</td>
+<td><ul><li class="slotno">Dose 1 : <?php echo $Slots1 ?></li>
+<?php
+}
+            if ($Slots2 > 0) {
+                ?>
+<li class="slotyes">Dose 2 : <?php echo $Slots2 ?></li></ul></td>
+<?php
+} else {
+                ?>
+<li class="slotno">Dose 2 : <?php echo $Slots2 ?></li></ul></td>
           <?php
 }
             ?>
@@ -107,26 +125,28 @@ if ($Slots > 0) {
     </div>
     <button class="btn btn-info btn-lg nextst" id="<?php echo $idpin ?>" name="nextst">See Next Day Slots <i></i></button>
 <?php
-  }else{
-    ?>
+} else {
+        ?>
     <h3>Sorry, no slots details are available for this date. Please try with another date.</h3>
     <?php
-  }
-  }
-  function get_data($url) {
+}
+}
+function get_data($url)
+{
     $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, $url);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-   //curl_setopt($ch, CURLOPT_PROXY, $proxy); // $proxy is ip of proxy server
-   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-   curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-   $httpCode = curl_getinfo($ch , CURLINFO_HTTP_CODE); // this results 0 every time
-   $response = curl_exec($ch);
-   if ($response === false) $response = curl_error($ch);
-   curl_close($ch);
-  return json_decode($response, true);
-  }
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); // this results 0 every time
+    $response = curl_exec($ch);
+    if ($response === false) {
+        $response = curl_error($ch);
+    }
+
+    curl_close($ch);
+    return json_decode($response, true);
+}
 ?>
-      
