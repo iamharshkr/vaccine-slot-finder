@@ -4,5 +4,5 @@ You can even filter your result according to minimum age limit.
 
 Live version : https://vaccine.subhdeals.com/
 
-![alt text](screenshot.png)
+![alt text](images/screenshot.png)
 
